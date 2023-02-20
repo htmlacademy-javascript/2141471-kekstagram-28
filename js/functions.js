@@ -1,7 +1,7 @@
 // function String Length
 
 function stringLength (str, length) {
-  let string = str.length;
+  const string = str.length;
 
   return (string < length) ? 'Хорошо' : 'Плохо';
 }
@@ -20,7 +20,7 @@ function integer (str) {
   let numberStr = '';
 
   for (let i = 0; i <= str.length; i++) {
-    let letter = parseInt(str[i], 10);
+    const letter = parseInt(str[i], 10);
     if (!isNaN(letter)) {
       numberStr += letter;
     }
@@ -53,10 +53,10 @@ function addLetter (str, num, addStr) {
 
       return newStr;
     } else {
-      let count1 = count - finish;
+      const count1 = count - finish;
       let secStr = '';
 
-      for (let char of addStr) {
+      for (const char of addStr) {
         newStr += char;
       }
       for (let i = 0; i < count1; i++) {
