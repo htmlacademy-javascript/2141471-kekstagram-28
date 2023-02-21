@@ -1,22 +1,21 @@
-// function String Length
+// function checkStringLength
 
-function stringLength (str, length) {
-  const string = str.length;
+function checkStringLength (str, maxLength) {
 
-  return (string < length) ? 'Хорошо' : 'Плохо';
+  return str.length < maxLength;
 }
 
-// function Palindrome
+// function isPalindrome
 
-function palindrome (str) {
+function isPalindrome (str) {
   const reverseStr = (str.split('').reverse().join(''));
 
-  return (str === reverseStr) ? 'Хорошо' : 'Плохо';
+  return str === reverseStr;
 }
 
-// function Integer
+// function extractNumbers
 
-function integer (str) {
+function extractNumbers (str) {
   let numberStr = '';
 
   for (let i = 0; i <= str.length; i++) {
@@ -27,7 +26,6 @@ function integer (str) {
   }
 
   if (numberStr.length) {
-
     return parseInt(numberStr, 10);
   }
 
@@ -36,42 +34,40 @@ function integer (str) {
 
 // function Addletter
 
-function addLetter (str, num, addStr) {
+function formingStringChar (str, num, addStr) {
   const start = str.length;
   const finish = addStr.length;
   const count = num - start;
   let newStr = '';
+  let secStr = '';
 
-  if (start < num && finish === 1) {
-    newStr = addStr.repeat(count) + str;
-  } else if (start < num) {
-    if (finish > count) {
-      for (let i = 0; i < count; i++) {
-        newStr += addStr[i];
-      }
-      newStr += str;
-
-      return newStr;
-    } else {
-      const count1 = count - finish;
-      let secStr = '';
-
-      for (const char of addStr) {
-        newStr += char;
-      }
-      for (let i = 0; i < count1; i++) {
-        secStr += addStr[i];
-      }
-      newStr = secStr + newStr + str;
-
-      return newStr;
-    }
+  if (str.length >= num) {
+    return str;
   }
 
-  return str;
+  if (finish === 1) {
+    return addStr.repeat(count) + str;
+  }
+
+  if (finish > count) {
+    for (let i = 0; i < count; i++) {
+      newStr += addStr[i];
+    }
+
+    return newStr + str;
+  }
+
+  for (const char of addStr) {
+    newStr += char;
+  }
+  for (let i = 0; i < count - finish; i++) {
+    secStr += addStr[i];
+  }
+
+  return secStr + newStr + str;
 }
 
-stringLength ('function',5);
-palindrome ('система');
-integer ('а2 я4 т4омат');
-addLetter ('q', 7, 'wes');
+checkStringLength ('function',5);
+isPalindrome ('система');
+extractNumbers ('а2 я4 т4омат');
+formingStringChar ('q', 7, 'wes');
