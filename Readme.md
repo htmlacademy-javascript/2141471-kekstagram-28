@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Наиль Марков](https://up.htmlacademy.ru/javascript/28/user/2141471).
-* Наставник: `[Андрей Ефимов](https://htmlacademy.ru/profile/efiand).
+* Наставник: [Андрей Ефимов](https://up.htmlacademy.ru/javascript/28/user/367335).
 
 ---
 
