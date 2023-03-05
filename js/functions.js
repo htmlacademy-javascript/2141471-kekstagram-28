@@ -2,7 +2,7 @@
 
 function checkStringLength (str, maxLength) {
 
-  return str.length < maxLength;
+  return str.length <= maxLength;
 }
 
 // function isPalindrome
