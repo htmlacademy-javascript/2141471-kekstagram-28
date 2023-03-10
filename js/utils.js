@@ -1,0 +1,53 @@
+const getIdCreator = (startNumber = 1) => {
+  let id = startNumber;
+
+  return () => id++;
+};
+
+const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+
+const getRandomArrayElement = (elements) => elements[Math.floor(Math.random() * elements.length)];
+
+const isPalindrome = (str) => {
+  const reverseStr = (str.split('').reverse().join(''));
+
+  return str === reverseStr;
+};
+
+const formingStringChar = (str, num, addStr) => {
+  const start = str.length;
+  const finish = addStr.length;
+  const count = num - start;
+  let newStr = '';
+  let secStr = '';
+
+  if (str.length >= num) {
+    return str;
+  }
+
+  if (finish === 1) {
+    return addStr.repeat(count) + str;
+  }
+
+  if (finish > count) {
+    for (let i = 0; i < count; i++) {
+      newStr += addStr[i];
+    }
+
+    return newStr + str;
+  }
+
+  for (const char of addStr) {
+    newStr += char;
+  }
+  for (let i = 0; i < count - finish; i++) {
+    secStr += addStr[i];
+  }
+
+  return secStr + newStr + str;
+};
+
+isPalindrome ('топот');
+formingStringChar ('g', 3, 'qwerty');
+
+export {getIdCreator, getRandomNumber, getRandomArrayElement};
