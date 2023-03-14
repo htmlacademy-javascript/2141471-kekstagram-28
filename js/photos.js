@@ -2,7 +2,7 @@ import { getIdCreator, getRandomNumber, getRandomArrayElement } from './utils.js
 
 const COUNT_OBJ = 25;
 
-const names = [
+const NAMES = [
   'Андрей',
   'Анна',
   'Борис',
@@ -16,7 +16,7 @@ const names = [
   'Роман',
 ];
 
-const messages = [
+const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -60,8 +60,8 @@ const createCommentId = getIdCreator();
 const createCommentObject = () => ({
   id: createCommentId(),
   avatar: `img/avatar-${ getRandomNumber(1, 6) }.svg`,
-  message: getRandomArrayElement(messages),
-  name: getRandomArrayElement(names),
+  message: getRandomArrayElement(MESSAGES),
+  name: getRandomArrayElement(NAMES),
 });
 
 const createPhotoObject = () => {
@@ -72,10 +72,10 @@ const createPhotoObject = () => {
     url: `photos/${ id }.jpg`,
     description: DESCRIPTIONS[id - 1],
     likes: getRandomNumber(15, 200),
-    comments: Array.from({length: getRandomNumber(1, 3)}, createCommentObject),
+    comments: Array.from({ length: getRandomNumber(1, 3) }, createCommentObject),
   };
 };
 
-const createPhotos = (length = COUNT_OBJ) => Array.from({length}, createPhotoObject);
+const createPhotos = (length = COUNT_OBJ) => Array.from({ length }, createPhotoObject);
 
-export {createPhotos};
+export { createPhotos };
