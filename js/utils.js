@@ -66,9 +66,11 @@ const extractNumbers = (str) => {
   return NaN;
 };
 
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
 checkStringLength('function', 5);
 extractNumbers('local2 56gg');
 isPalindrome ('топот');
 formingStringChar ('g', 3, 'qwerty');
 
-export { getIdCreator, getRandomNumber, getRandomArrayElement };
+export { getIdCreator, getRandomNumber, getRandomArrayElement, isEscapeKey };
