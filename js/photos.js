@@ -72,7 +72,7 @@ const createPhotoObject = () => {
     url: `photos/${ id }.jpg`,
     description: DESCRIPTIONS[id - 1],
     likes: getRandomNumber(15, 200),
-    comments: Array.from({ length: getRandomNumber(1, 3) }, createCommentObject),
+    comments: Array.from({ length: getRandomNumber(1, 20) }, createCommentObject),
   };
 };
 
