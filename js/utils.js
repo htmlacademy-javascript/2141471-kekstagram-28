@@ -67,10 +67,21 @@ const extractNumbers = (str) => {
 };
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
+const isFieldFocused = () => ['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase());
+
+const openModal = (nameClass, scrollHidden) => {
+  nameClass.classList.remove('hidden');
+  scrollHidden.classList.add('modal-open');
+};
+
+const closeModal = (nameClass, scrollHidden) => {
+  nameClass.classList.add('hidden');
+  scrollHidden.classList.remove('modal-open');
+};
 
 checkStringLength('function', 5);
 extractNumbers('local2 56gg');
 isPalindrome ('топот');
 formingStringChar ('g', 3, 'qwerty');
 
-export { getIdCreator, getRandomNumber, getRandomArrayElement, isEscapeKey };
+export { getIdCreator, getRandomNumber, getRandomArrayElement, isEscapeKey, openModal, closeModal, isFieldFocused };
