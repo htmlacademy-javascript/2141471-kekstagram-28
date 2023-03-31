@@ -1,31 +1,43 @@
-import { isEscapeKey, openModal, closeModal, isFieldFocused } from './utils.js';
+import { isEscapeKey, openModal, closeModal, isFieldFocused, createSplitString } from './utils.js';
 
+const REGXP = /^#[a-z0-9а-яё]{1,19}$/i;
 const pageElement = document.body;
 
-const editForm = document.querySelector('#upload-select-image');
-const hashtagElement = editForm.querySelector('#hashtags');
-const commentElement = editForm.querySelector('.text__description');
+const formElement = document.querySelector('#upload-select-image');
+const hashtagElement = formElement.querySelector('.text__hashtags');
+const commentElement = formElement.querySelector('.text__description');
 
 const wrapperElement = document.querySelector('.img-upload__overlay');
 const uploadFileElement = document.querySelector('#upload-file');
 
-const validateLengthHashtags = (value) => value.length >= 2 && value.length <= 104;
+const validateCountHashtags = (value) => {
+  const countHashtags = createSplitString(value);
+
+  if (countHashtags.length > 4) {
+    return false;
+  }
+
+  return true;
+};
 
 const validateCorrectHashtags = (value) => {
-  const regxp = /^#[a-z0-9а-яё]{1,19}$/i;
-  const string = value;
+  const correctHashtags = createSplitString(value);
 
-  const hashtags = string.split(' ', 5);
-
-  for (const hashtag of hashtags) {
-    const resultHashtag = regxp.test(hashtag);
-    if (!resultHashtag) {
+  for (const hashtag of correctHashtags) {
+    const resultHashtag = REGXP.test(hashtag);
+    if (hashtag && !resultHashtag) {
       return false;
     }
   }
 
-  const uniqHashtag = new Set(hashtags);
-  if (hashtags.length !== uniqHashtag.size) {
+  return true;
+};
+
+const validateRepeateHashtags = (value) => {
+  const repeateHashtags = createSplitString(value);
+  const uniqHashtags = new Set(repeateHashtags);
+
+  if (repeateHashtags.length !== uniqHashtags.size) {
     return false;
   }
 
@@ -34,24 +46,24 @@ const validateCorrectHashtags = (value) => {
 
 const validateComment = (value) => value.length <= 140;
 
-const pristine = new Pristine(editForm, {
+const pristine = new Pristine(formElement , {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
-  errorTextTag: 'div',
   errorTextClass: 'error-message'
 }, false);
 
-pristine.addValidator(hashtagElement, validateLengthHashtags, 'от 2 до 104 символов');
-pristine.addValidator(hashtagElement, validateCorrectHashtags, 'Не корректный Хэштэг!');
+pristine.addValidator(hashtagElement, validateCountHashtags, 'Не более 5 хэштэгов');
+pristine.addValidator(hashtagElement, validateCorrectHashtags, 'Начало хэштэга с "#", буквы и цифры, не более 20 символов');
+pristine.addValidator(hashtagElement, validateRepeateHashtags, 'Хэштэг не должен повторятся');
 pristine.addValidator(commentElement, validateComment,'не длинее 140 символов');
 
-editForm.addEventListener('submit', (evt) => {
+formElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
 
   const isValid = pristine.validate();
   if (isValid) {
-    editForm.submit();
-    editForm.reset();
+    formElement.submit();
+    formElement.reset();
   }
 });
 

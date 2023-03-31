@@ -24,7 +24,7 @@ const createMessageSuccess = () => {
   messageSuccess.querySelector('.success__title');
   messageSuccess.querySelector('.success__button');
 
-  return messageSuccess;
+  pageElement.append(messageSuccess);
 };
 
 export { createMessageError, createMessageSuccess };
