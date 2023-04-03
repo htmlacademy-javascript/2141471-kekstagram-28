@@ -68,7 +68,7 @@ const extractNumbers = (str) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 const isFieldFocused = () => ['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase());
-const createSplitString = (string) => string.split(' ');
+const createSplitString = (string, splitter = ' ') => string.split(splitter);
 
 const openModal = (modalElement, scrollHiddenElement) => {
   modalElement.classList.remove('hidden');

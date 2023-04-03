@@ -13,7 +13,7 @@ const uploadFileElement = document.querySelector('#upload-file');
 const validateCountHashtags = (value) => {
   const countHashtags = createSplitString(value);
 
-  if (countHashtags.length > 4) {
+  if (countHashtags.length > 5) {
     return false;
   }
 
@@ -34,14 +34,10 @@ const validateCorrectHashtags = (value) => {
 };
 
 const validateRepeateHashtags = (value) => {
-  const repeateHashtags = createSplitString(value);
+  const repeateHashtags = createSplitString(value).map((hashtag) => hashtag.toLowerCase());
   const uniqHashtags = new Set(repeateHashtags);
 
-  if (repeateHashtags.length !== uniqHashtags.size) {
-    return false;
-  }
-
-  return true;
+  return repeateHashtags.length === uniqHashtags.size;
 };
 
 const validateComment = (value) => value.length <= 140;
