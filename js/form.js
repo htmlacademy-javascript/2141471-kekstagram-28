@@ -1,23 +1,19 @@
-import { isEscapeKey, openModal, closeModal, isFieldFocused, createSplitString } from './utils.js';
+import { checkStringLength, isEscapeKey, openModal, closeModal, isFieldFocused, createSplitString } from './utils.js';
+import { initEffects } from './effects.js';
 
 const REGXP = /^#[a-z0-9а-яё]{1,19}$/i;
-const pageElement = document.body;
+const COMMENT_MAX_LENGTH = 140;
 
 const formElement = document.querySelector('#upload-select-image');
-const hashtagElement = formElement.querySelector('.text__hashtags');
-const commentElement = formElement.querySelector('.text__description');
-
-const wrapperElement = document.querySelector('.img-upload__overlay');
-const uploadFileElement = document.querySelector('#upload-file');
+const uploadFileElement = formElement.querySelector('#upload-file');
+const wrapperElement = formElement.querySelector('.img-upload__overlay');
+const hashtagElement = wrapperElement.querySelector('.text__hashtags');
+const commentElement = wrapperElement.querySelector('.text__description');
 
 const validateCountHashtags = (value) => {
   const countHashtags = createSplitString(value);
 
-  if (countHashtags.length > 5) {
-    return false;
-  }
-
-  return true;
+  return countHashtags.length <= 5;
 };
 
 const validateCorrectHashtags = (value) => {
@@ -40,16 +36,31 @@ const validateRepeateHashtags = (value) => {
   return repeateHashtags.length === uniqHashtags.size;
 };
 
-const validateComment = (value) => value.length <= 140;
+const validateComment = (value) => checkStringLength(value, COMMENT_MAX_LENGTH);
 
-const pristine = new Pristine(formElement , {
-  classTo: 'img-upload__field-wrapper',
-  errorTextParent: 'img-upload__field-wrapper',
-  errorTextClass: 'error-message'
-}, false);
+const pristine = new Pristine(
+  formElement,
+  {
+    classTo: 'img-upload__field-wrapper',
+    errorTextParent: 'img-upload__field-wrapper',
+    errorTextClass: 'error-message'
+  },
+  false
+);
+
+const effectsComponenet = initEffects(formElement);
+
+const closeForm = () => {
+  formElement.reset();
+  closeModal(wrapperElement, onKeyDown);
+};
 
 pristine.addValidator(hashtagElement, validateCountHashtags, 'Не более 5 хэштэгов');
-pristine.addValidator(hashtagElement, validateCorrectHashtags, 'Начало хэштэга с "#", буквы и цифры, не более 20 символов');
+pristine.addValidator(
+  hashtagElement,
+  validateCorrectHashtags,
+  'Начало хэштэга с "#", буквы и цифры, не более 20 символов'
+);
 pristine.addValidator(hashtagElement, validateRepeateHashtags, 'Хэштэг не должен повторятся');
 pristine.addValidator(commentElement, validateComment,'не длинее 140 символов');
 
@@ -59,22 +70,25 @@ formElement.addEventListener('submit', (evt) => {
   const isValid = pristine.validate();
   if (isValid) {
     formElement.submit();
-    formElement.reset();
   }
 });
 
-uploadFileElement.addEventListener('change', () => {
-  openModal(wrapperElement, pageElement);
+formElement.addEventListener('reset', () => {
+  pristine.reset();
+  effectsComponenet.reset();
 });
 
-document.addEventListener('keydown', (evt) => {
+function onKeyDown(evt) {
   if (isEscapeKey(evt) && !isFieldFocused(evt)) {
     evt.preventDefault();
-    closeModal(wrapperElement, pageElement);
+    closeForm();
   }
+}
+
+uploadFileElement.addEventListener('change', () => {
+  openModal(wrapperElement, onKeyDown);
 });
 
 document.querySelector('#upload-cancel').addEventListener('click', () => {
-  closeModal(wrapperElement, pageElement);
+  closeForm();
 });
-

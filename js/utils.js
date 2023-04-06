@@ -9,7 +9,7 @@ const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)
 const getRandomArrayElement = (elements) => elements[Math.floor(Math.random() * elements.length)];
 
 const isPalindrome = (str) => {
-  const reverseStr = (str.split('').reverse().join(''));
+  const reverseStr = str.split('').reverse().join('');
 
   return str === reverseStr;
 };
@@ -70,19 +70,29 @@ const isEscapeKey = (evt) => evt.key === 'Escape';
 const isFieldFocused = () => ['input', 'textarea'].includes(document.activeElement.tagName.toLowerCase());
 const createSplitString = (string, splitter = ' ') => string.split(splitter);
 
-const openModal = (modalElement, scrollHiddenElement) => {
+const openModal = (modalElement, onKeyDown, scrollHiddenElement = document.body) => {
+  document.addEventListener('keydown', onKeyDown);
   modalElement.classList.remove('hidden');
   scrollHiddenElement.classList.add('modal-open');
 };
 
-const closeModal = (modalElement, scrollHiddenElement) => {
+const closeModal = (modalElement, onKeyDown, scrollHiddenElement = document.body) => {
+  document.removeEventListener('keydown', onKeyDown);
   modalElement.classList.add('hidden');
   scrollHiddenElement.classList.remove('modal-open');
 };
 
-checkStringLength('function', 5);
-extractNumbers('local2 56gg');
-isPalindrome ('топот');
-formingStringChar ('g', 3, 'qwerty');
-
-export { getIdCreator, getRandomNumber, getRandomArrayElement, isEscapeKey, openModal, closeModal, isFieldFocused, createSplitString };
+export {
+  checkStringLength,
+  formingStringChar,
+  extractNumbers,
+  getIdCreator,
+  getRandomNumber,
+  getRandomArrayElement,
+  isEscapeKey,
+  isPalindrome,
+  openModal,
+  closeModal,
+  isFieldFocused,
+  createSplitString
+};

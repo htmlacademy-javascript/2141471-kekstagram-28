@@ -1,12 +1,10 @@
-import { isEscapeKey, closeModal } from './utils.js';
+import { isEscapeKey, openModal, closeModal } from './utils.js';
 import { createTemplateComment } from './template-comment.js';
 
 const COMMENT_PORTION = 5;
 let currentComments = [];
 let start = 0;
 let countComments;
-
-const pageElement = document.body;
 
 const wrapperElement = document.querySelector('.big-picture');
 const pictureElement = wrapperElement.querySelector('.big-picture__img img');
@@ -33,12 +31,17 @@ const showComments = () => {
   }
 };
 
+const onKeyDown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeModal(wrapperElement, onKeyDown);
+  }
+};
+
 const showPicture = ({ url, description, likes, comments }) => {
   start = 0;
   countComments = 0;
-  wrapperElement.classList.remove('hidden');
   moreButtonElement.classList.remove('hidden');
-  pageElement.classList.add('modal-open');
   pictureElement.src = url;
   likesElement.textContent = likes;
   descriptionElement.textContent = description;
@@ -47,18 +50,12 @@ const showPicture = ({ url, description, likes, comments }) => {
   commentsElement.innerHTML = '';
   currentComments = comments;
 
+  openModal(wrapperElement, onKeyDown);
   showComments();
 };
 
-document.addEventListener('keydown', (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeModal(wrapperElement, pageElement);
-  }
-});
-
 document.querySelector('#picture-cancel').addEventListener('click', () => {
-  closeModal(wrapperElement, pageElement);
+  closeModal(wrapperElement, onKeyDown);
 });
 
 moreButtonElement.addEventListener('click', () => showComments());
