@@ -11,7 +11,7 @@ const getData = (onSuccess) => {
     });
 };
 
-const sendData = (onSuccess, onOk, onFail, body) => {
+const sendData = (onSuccess, onFail, body) => {
   fetch(
     'https://28.javascript.pages.academy/kekstagram',
     {
@@ -22,10 +22,11 @@ const sendData = (onSuccess, onOk, onFail, body) => {
     .then((response) => {
       if (response.ok) {
         onSuccess();
-        onOk();
+      } else {
+        throw new Error;
       }
     })
-    .catch(() => onFail());
+    .catch(onFail);
 };
 
 export { getData, sendData };

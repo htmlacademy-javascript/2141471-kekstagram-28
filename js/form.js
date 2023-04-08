@@ -21,6 +21,7 @@ const blockSubmitButton = () => {
 const unblockSubmitButton = () => {
   buttonSubmitElement.disabled = false;
   buttonSubmitElement.textContent = 'Опубликовать';
+  return buttonSubmitElement;
 };
 
 const validateCountHashtags = (value) => {
@@ -84,11 +85,16 @@ const setUserFormSubmit = (onSuccess) => {
     if (isValid) {
       blockSubmitButton();
       sendData(
-        () => onSuccess(),
-        () => createMessageSuccess(),
-        () => createMessageError(),
+        () => {
+          onSuccess();
+          createMessageSuccess();
+          unblockSubmitButton();
+        },
+        () => {
+          createMessageError();
+          unblockSubmitButton();
+        },
         new FormData(evt.target),
-        unblockSubmitButton(),
       );
     }
   });
