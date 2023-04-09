@@ -1,5 +1,7 @@
 import { checkStringLength, isEscapeKey, openModal, closeModal, isFieldFocused, createSplitString } from './utils.js';
 import { initEffects } from './effects.js';
+import { createMessageError, createMessageSuccess } from './template-message.js';
+import { sendData } from './load.js';
 
 const REGXP = /^#[a-z0-9а-яё]{1,19}$/i;
 const COMMENT_MAX_LENGTH = 140;
@@ -9,6 +11,18 @@ const uploadFileElement = formElement.querySelector('#upload-file');
 const wrapperElement = formElement.querySelector('.img-upload__overlay');
 const hashtagElement = wrapperElement.querySelector('.text__hashtags');
 const commentElement = wrapperElement.querySelector('.text__description');
+const buttonSubmitElement = wrapperElement.querySelector('.img-upload__submit');
+
+const blockSubmitButton = () => {
+  buttonSubmitElement.setAttribute('disabled', true);
+  buttonSubmitElement.textContent = 'Отправка...';
+};
+
+const unblockSubmitButton = () => {
+  buttonSubmitElement.disabled = false;
+  buttonSubmitElement.textContent = 'Опубликовать';
+  return buttonSubmitElement;
+};
 
 const validateCountHashtags = (value) => {
   const countHashtags = createSplitString(value);
@@ -64,14 +78,27 @@ pristine.addValidator(
 pristine.addValidator(hashtagElement, validateRepeateHashtags, 'Хэштэг не должен повторятся');
 pristine.addValidator(commentElement, validateComment,'не длинее 140 символов');
 
-formElement.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-
-  const isValid = pristine.validate();
-  if (isValid) {
-    formElement.submit();
-  }
-});
+const setUserFormSubmit = (onSuccess) => {
+  formElement.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitButton();
+      sendData(
+        () => {
+          onSuccess();
+          createMessageSuccess();
+          unblockSubmitButton();
+        },
+        () => {
+          createMessageError();
+          unblockSubmitButton();
+        },
+        new FormData(evt.target),
+      );
+    }
+  });
+};
 
 formElement.addEventListener('reset', () => {
   pristine.reset();
@@ -87,8 +114,11 @@ function onKeyDown(evt) {
 
 uploadFileElement.addEventListener('change', () => {
   openModal(wrapperElement, onKeyDown);
+  formElement.querySelector('input').blur();
 });
 
 document.querySelector('#upload-cancel').addEventListener('click', () => {
   closeForm();
 });
+
+export { setUserFormSubmit, closeForm, onKeyDown };
