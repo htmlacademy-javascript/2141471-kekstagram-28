@@ -1,3 +1,5 @@
+const TIMEOUT = 500;
+
 const getIdCreator = (startNumber = 1) => {
   let id = startNumber;
 
@@ -82,14 +84,14 @@ const closeModal = (modalElement, onKeyDown, scrollHiddenElement = document.body
   scrollHiddenElement.classList.remove('modal-open');
 };
 
-function debounce (callback, timeoutDelay = 500) {
+const debounce = (callback, timeoutDelay = TIMEOUT) => {
   let timeoutId;
 
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-}
+};
 
 export {
   checkStringLength,

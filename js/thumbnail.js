@@ -24,43 +24,41 @@ const createPhotos = (photos) => {
   });
 
   photoListElement.append(photoListFragment);
-  imgFilterElement.classList.remove('img-filters--inactive');
 };
 
-const innitFilter = (photosFilter) => {
+const clearListPhoto = () => {
+  photoListElement
+    .querySelectorAll('.picture')
+    .forEach((element) => element.remove());
+};
+
+const setFilter = (a, b) => b.comments.length - a.comments.length;
+
+const initFilter = (filteredPhotos) => {
   const defaultFilterElement = document.querySelector('#filter-default');
   const randomFilterElement = document.querySelector('#filter-random');
   const discussedFilterElement = document.querySelector('#filter-discussed');
 
-  const getUpdatePhoto = () => {
-    photoListElement
-      .querySelectorAll('.picture')
-      .forEach((element) => element.remove());
-  };
-
   const getDefaultPhoto = () => {
-    getUpdatePhoto();
-    createPhotos(photosFilter);
+    clearListPhoto();
+    createPhotos(filteredPhotos);
   };
 
   const getRandomPhoto = () => {
     const randomPhoto = [];
     while (randomPhoto.length < 10) {
-      const photo = getRandomArrayElement(photosFilter);
+      const photo = getRandomArrayElement(filteredPhotos);
       if(randomPhoto.indexOf(photo) === -1) {
         randomPhoto.push(photo);
       }
     }
-    getUpdatePhoto();
+    clearListPhoto();
     createPhotos(randomPhoto);
   };
 
   const getDiscussedPhoto = () => {
-    const setFilter = (a, b) => b.comments.length - a.comments.length;
-    const sortedphotosFilter = photosFilter.slice();
-    sortedphotosFilter.sort(setFilter);
-    getUpdatePhoto();
-    createPhotos(sortedphotosFilter);
+    clearListPhoto();
+    createPhotos(filteredPhotos.slice().sort(setFilter));
   };
 
   defaultFilterElement.addEventListener('click', debounce(getDefaultPhoto));
@@ -68,6 +66,8 @@ const innitFilter = (photosFilter) => {
   randomFilterElement.addEventListener('click', debounce(getRandomPhoto));
 
   discussedFilterElement.addEventListener('click', debounce(getDiscussedPhoto));
+
+  imgFilterElement.classList.remove('img-filters--inactive');
 };
 
-export { createPhotos, innitFilter };
+export { createPhotos, initFilter };
