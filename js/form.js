@@ -21,7 +21,6 @@ const blockSubmitButton = () => {
 const unblockSubmitButton = () => {
   buttonSubmitElement.disabled = false;
   buttonSubmitElement.textContent = 'Опубликовать';
-  return buttonSubmitElement;
 };
 
 const validateCountHashtags = (value) => {

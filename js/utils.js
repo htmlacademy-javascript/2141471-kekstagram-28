@@ -82,8 +82,18 @@ const closeModal = (modalElement, onKeyDown, scrollHiddenElement = document.body
   scrollHiddenElement.classList.remove('modal-open');
 };
 
+function debounce (callback, timeoutDelay = 500) {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
+
 export {
   checkStringLength,
+  debounce,
   formingStringChar,
   extractNumbers,
   getIdCreator,

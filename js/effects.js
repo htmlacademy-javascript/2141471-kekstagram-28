@@ -30,6 +30,7 @@ const Effect = {
     filter: 'brightness'
   },
 };
+
 const initEffects = (formElement) => {
   const valueElement = formElement.querySelector('.effect-level__value');
   const imgPreviewElement = formElement.querySelector('.img-upload__preview');
