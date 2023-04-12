@@ -1,15 +1,23 @@
-const FILE_EXTERNSION = ['jpg', 'png', 'gif', 'jpeg'];
+import { showError } from './template-message.js';
 
-const fileChooser = document.querySelector('#upload-file');
+const FILE_EXTENSIONS = ['jpg', 'png', 'gif', 'jpeg'];
+const ERROR_MESSAGE = `Только форматы ${FILE_EXTENSIONS.join(', ')}`;
+
 const previewPhoto = document.querySelector('.img-upload__preview img');
 
-fileChooser.addEventListener('change', () => {
+const choosePhoto = (fileChooser) => {
   const file = fileChooser.files[0];
   const fileName = file.name.toLowerCase();
 
-  const matches = FILE_EXTERNSION.some((it) => fileName.endsWith(it));
+  const matches = FILE_EXTENSIONS.some((it) => fileName.endsWith(it));
 
   if (matches) {
     previewPhoto.src = URL.createObjectURL(file);
+    return true;
   }
-});
+
+  showError(ERROR_MESSAGE);
+  return false;
+};
+
+export { choosePhoto };

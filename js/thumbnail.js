@@ -1,8 +1,12 @@
 import { showPicture } from './show-photo.js';
 import { getRandomArrayElement, debounce } from './utils.js';
 
-const imgFilterElement = document.querySelector('.img-filters');
+const MAX_RANDOM = 10;
+
+const imgFiltersElement = document.querySelector('.img-filters');
 const photoListElement = document.querySelector('.pictures');
+const buttonElements = imgFiltersElement.querySelectorAll('.img-filters__button');
+const [defaultFilterElement, randomFilterElement, discussedFilterElement] = buttonElements;
 
 const photoTeplate = document.querySelector('#picture')
   .content
@@ -26,48 +30,46 @@ const createPhotos = (photos) => {
   photoListElement.append(photoListFragment);
 };
 
-const clearListPhoto = () => {
+const handleSorting = (currentButtonElement, photos) => {
+  buttonElements.forEach((buttonElement) => {
+    buttonElement.classList.remove('img-filters__button--active');
+  });
+  currentButtonElement.classList.add('img-filters__button--active');
+
   photoListElement
     .querySelectorAll('.picture')
     .forEach((element) => element.remove());
+
+  createPhotos(photos);
 };
 
-const setFilter = (a, b) => b.comments.length - a.comments.length;
-
-const initFilter = (filteredPhotos) => {
-  const defaultFilterElement = document.querySelector('#filter-default');
-  const randomFilterElement = document.querySelector('#filter-random');
-  const discussedFilterElement = document.querySelector('#filter-discussed');
-
-  const getDefaultPhoto = () => {
-    clearListPhoto();
-    createPhotos(filteredPhotos);
-  };
-
-  const getRandomPhoto = () => {
-    const randomPhoto = [];
-    while (randomPhoto.length < 10) {
-      const photo = getRandomArrayElement(filteredPhotos);
-      if(randomPhoto.indexOf(photo) === -1) {
-        randomPhoto.push(photo);
-      }
+const getRandomPhotos = (photos) => {
+  const randomPhotos = [];
+  while (randomPhotos.length < MAX_RANDOM) {
+    const photo = getRandomArrayElement(photos);
+    if (randomPhotos.indexOf(photo) === -1) {
+      randomPhotos.push(photo);
     }
-    clearListPhoto();
-    createPhotos(randomPhoto);
-  };
+  }
+  return randomPhotos;
+};
 
-  const getDiscussedPhoto = () => {
-    clearListPhoto();
-    createPhotos(filteredPhotos.slice().sort(setFilter));
-  };
+const sortByComments = (a, b) => b.comments.length - a.comments.length;
 
-  defaultFilterElement.addEventListener('click', debounce(getDefaultPhoto));
+const initFilter = (photos) => {
+  defaultFilterElement.addEventListener('click', debounce((evt) => {
+    handleSorting(evt.target, photos);
+  }));
 
-  randomFilterElement.addEventListener('click', debounce(getRandomPhoto));
+  randomFilterElement.addEventListener('click', debounce((evt) => {
+    handleSorting(evt.target, getRandomPhotos(photos));
+  }));
 
-  discussedFilterElement.addEventListener('click', debounce(getDiscussedPhoto));
+  discussedFilterElement.addEventListener('click', debounce((evt) => {
+    handleSorting(evt.target, photos.slice().sort(sortByComments));
+  }));
 
-  imgFilterElement.classList.remove('img-filters--inactive');
+  imgFiltersElement.classList.remove('img-filters--inactive');
 };
 
 export { createPhotos, initFilter };
