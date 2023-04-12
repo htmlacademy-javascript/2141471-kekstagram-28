@@ -1,4 +1,4 @@
-import { isEscapeKey } from './utils.js';
+import { isEscapeKey, openModal, closeModal } from './utils.js';
 import { onKeyDown as onFormKeyDown } from './form.js';
 
 const TIMEOUT = 5000;
@@ -17,7 +17,7 @@ const createMessage = (messageTemplate, blockName) => {
 
   const closeMessage = () => {
     messageElement.remove();
-    document.removeEventListener('keydown', onKeyDown);
+    closeModal(messageElement, onKeyDown);
 
     if (blockName === 'error') {
       document.addEventListener('keydown', onFormKeyDown);
@@ -41,7 +41,7 @@ const createMessage = (messageTemplate, blockName) => {
     }
   });
 
-  document.addEventListener('keydown', onKeyDown);
+  openModal(messageElement, onKeyDown);
 
   document.body.append(messageElement);
 };
