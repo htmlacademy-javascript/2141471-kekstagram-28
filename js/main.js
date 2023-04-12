@@ -1,9 +1,10 @@
-import { createPhotos } from './thumbnail.js';
-import { closeForm, setUserFormSubmit } from './form.js';
+import { createPhotos, initFilter } from './thumbnail.js';
+import { setUserFormSubmit } from './form.js';
 import { getData } from './load.js';
 
 getData((photos) => {
   createPhotos(photos);
+  initFilter(photos);
 });
 
-setUserFormSubmit(closeForm);
+setUserFormSubmit();

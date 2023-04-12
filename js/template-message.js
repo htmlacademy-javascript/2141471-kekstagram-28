@@ -1,6 +1,8 @@
 import { isEscapeKey } from './utils.js';
 import { onKeyDown } from './form.js';
 
+const TIMEOUT = 5000;
+
 const pageElement = document.body;
 const messageErrorElement = document.querySelector('#error')
   .content
@@ -87,7 +89,7 @@ const showError = (message) => {
 
   setTimeout(() => {
     messageContainer.remove();
-  }, 5000);
+  }, TIMEOUT);
 };
 
 export {

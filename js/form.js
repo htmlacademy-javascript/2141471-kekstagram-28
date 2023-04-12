@@ -2,6 +2,7 @@ import { checkStringLength, isEscapeKey, openModal, closeModal, isFieldFocused, 
 import { initEffects } from './effects.js';
 import { createMessageError, createMessageSuccess } from './template-message.js';
 import { sendData } from './load.js';
+import { choosePhoto } from './photo.js';
 
 const REGXP = /^#[a-z0-9а-яё]{1,19}$/i;
 const COMMENT_MAX_LENGTH = 140;
@@ -21,7 +22,6 @@ const blockSubmitButton = () => {
 const unblockSubmitButton = () => {
   buttonSubmitElement.disabled = false;
   buttonSubmitElement.textContent = 'Опубликовать';
-  return buttonSubmitElement;
 };
 
 const validateCountHashtags = (value) => {
@@ -78,7 +78,7 @@ pristine.addValidator(
 pristine.addValidator(hashtagElement, validateRepeateHashtags, 'Хэштэг не должен повторятся');
 pristine.addValidator(commentElement, validateComment,'не длинее 140 символов');
 
-const setUserFormSubmit = (onSuccess) => {
+const setUserFormSubmit = () => {
   formElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
@@ -86,7 +86,7 @@ const setUserFormSubmit = (onSuccess) => {
       blockSubmitButton();
       sendData(
         () => {
-          onSuccess();
+          closeForm();
           createMessageSuccess();
           unblockSubmitButton();
         },
@@ -113,12 +113,14 @@ function onKeyDown(evt) {
 }
 
 uploadFileElement.addEventListener('change', () => {
-  openModal(wrapperElement, onKeyDown);
-  formElement.querySelector('input').blur();
+  if (choosePhoto(uploadFileElement)) {
+    openModal(wrapperElement, onKeyDown);
+    formElement.querySelector('input').blur();
+  }
 });
 
 document.querySelector('#upload-cancel').addEventListener('click', () => {
   closeForm();
 });
 
-export { setUserFormSubmit, closeForm, onKeyDown };
+export { setUserFormSubmit, onKeyDown };
